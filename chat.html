@@ -19,6 +19,7 @@
         .user-message {
             color: rgb(17, 210, 0);
             /* Text color for the current user's messages */
+            text-align: right;
         }
 
         .other-user-message {
@@ -57,12 +58,12 @@
         // Get references to elements
         const searchInput = document.getElementById('searchRooms');
         const roomList = document.getElementById('roomList');
-        
+
         // Event listener for search input changes
         searchInput.addEventListener('input', function () {
             const searchTerm = searchInput.value.toLowerCase();
             const roomItems = roomList.getElementsByTagName('li');
-            
+
             // Loop through each room item and hide/show based on the search term
             Array.from(roomItems).forEach(item => {
                 const roomText = item.textContent.toLowerCase();
@@ -74,7 +75,7 @@
             });
         });
     </script>
-    
+
     <script>
         function formatTimestamp(timestamp) {
             const date = new Date(timestamp);
@@ -101,22 +102,24 @@
                 });
         }
 
-        function sendMessage(roomId, message, username) {
+        function sendMessage(roomId, message, username, password) {
             fetch(`https://chat-app-albertslund-2023-dbe996610a5f.herokuapp.com/room/${roomId}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ message, user: username }),
+                body: JSON.stringify({ message, user: username, password }),
             })
-                .then(response => {
-                    if (response.ok) {
-                        fetchData(roomId, username);
-                    }
-                })
-                .catch(error => {
-                    console.error('Error sending message: ' + error);
-                });
+            .then(response => {
+                if (response.ok) {
+                    fetchData(roomId, username);
+                } else {
+                    alert('Failed to send message. Incorrect password.');
+                }
+            })
+            .catch(error => {
+                console.error('Error sending message: ' + error);
+            });
         }
 
         document.getElementById('chatForm').addEventListener('submit', function (e) {
@@ -124,7 +127,7 @@
             const messageInput = document.getElementById('messageInput');
             const message = messageInput.value;
             if (message) {
-                sendMessage(roomId, message, username);
+                sendMessage(roomId, message, username, password);
                 messageInput.value = '';
             }
         });
@@ -132,12 +135,13 @@
         const urlParams = new URLSearchParams(window.location.search);
         const roomId = urlParams.get('roomId');
         const username = urlParams.get('username');
+        const password = urlParams.get('password'); // Retrieve the password from URL
 
         fetchData(roomId, username);
 
-        setInterval(function () {
-            fetchData(roomId, username);
-        }, 1000);
+        //setInterval(function () {
+        //    fetchData(roomId, username);
+        //}, 1000);
     </script>
 
     <script>

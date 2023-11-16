@@ -37,21 +37,25 @@
     <div id="chat">
         <!-- Chat messages will be displayed here -->
     </div>
+
     <form id="chatForm">
         <input type="text" id="usernameInput" placeholder="Enter your name">
+        <input type="password" id="passwordInput" placeholder="Enter your password">
         <input type="text" id="roomnameInput" placeholder="Enter room name">
-        <button type="submit">Send</button>
+        <button type="submit">Join</button>
     </form>
-
+    
     <script>
         document.getElementById('chatForm').addEventListener('submit', function (e) {
             e.preventDefault();
             const usernameInput = document.getElementById('usernameInput');
-            const username = usernameInput.value;
+            const passwordInput = document.getElementById('passwordInput');
             const roomnameInput = document.getElementById('roomnameInput');
+            const username = usernameInput.value;
+            const password = passwordInput.value;
             const roomname = roomnameInput.value;
 
-            window.location.href = `./chat.html?roomId=${roomname}&username=${username}`;
+            window.location.href = `./chat.html?roomId=${roomname}&username=${username}&password=${password}`;
         });
     </script>
 </body>
